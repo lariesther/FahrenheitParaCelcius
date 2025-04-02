@@ -1,74 +1,60 @@
 import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaView, StyleSheet, Text, View, TextInput, Touchable, TouchableOpacity, Keyboard } from 'react-native';
-import Ionicons from "@expo/vector-icons/Ionicons"
+import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard } from 'react-native';
+import Ionicons from "@expo/vector-icons/Ionicons";
+
 export default function App() {
-  const [height, setHeight] = useState(null);
-  const [weight, setWeight] = useState(null);
-  const [Fc, setFc ] = useState(null);
-  const [texteButton, setTextButton] = useState("Calcular");
-  const [messageFc, setMessageFc] = useState("coloque os graus em Fahrenheit")
-  
-  function FahrenheitCalculator() {*
-    // (Celsius /(fahrenheit - dado)))°F − 32) × 5/9 
-    setFc((weight / (height * height)).toFixed(2));
+  const [fahrenheit, setFahrenheit] = useState(null);
+  const [celsius, setCelsius] = useState(null);
+  const [texteButton, setTextButton] = useState("Converter");
+  const [messageTemp, setMessageTemp] = useState("Preencha a temperatura em Fahrenheit");
+
+  function FahrenheitToCelsius() {
+    // Fórmula para conversão de Fahrenheit para Celsius: (Fahrenheit - 32) * 5/9
+    setCelsius(((fahrenheit - 32) * 5 / 9).toFixed(2));
   }
-  function validateFc() {
-    if (weight != null && height != null) {
+
+  function validateTemperature() {
+    if (fahrenheit != null) {
       Keyboard.dismiss();
-      imcCalculator();
-      setHeight(null);
-      setWeight(null);
-      setTextButton("Calcular Novamente");
-      setMessageFc("Seu IMC é igual a:");
+      FahrenheitToCelsius();
+      setFahrenheit(null);
+      setTextButton("Converter Novamente");
+      setMessageTemp("A temperatura em Celsius é:");
       return;
     }
 
-    setFc(null);
-    setTextButton("Calcular");
-    setMessageFc("preencha peso e altura");
+    setCelsius(null);
+    setTextButton("Converter");
+    setMessageTemp("Preencha a temperatura em Fahrenheit");
   }
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.titleBox}>
-        <Text style={styles.titleText}>Silvinha Health App</Text>
+        <Text style={styles.titleText}>Temperature App</Text>
       </View>
 
       <View style={styles.content}>
-        <Text style={styles.subTitle}>calculadora de IMC</Text>
+        <Text style={styles.subTitle}>Conversor de Temperatura</Text>
         <View>
-          <Text style={styles.label}>Altura</Text>
+          <Text style={styles.label}>Temperatura (°F)</Text>
           <TextInput
             style={styles.input}
-            onChangeText={setHeight}
-            value={height ?? ''}
-            placeholder='Ex. 1.70'
-            KeyboardType='numeric'
+            onChangeText={(text) => setFahrenheit(parseFloat(text))}
+            value={fahrenheit ?? ''}
+            placeholder='Ex. 32'
+            keyboardType='numeric' // Corrigido para minúsculas
           />
         </View>
-        <View style={{ Margintop: 25 }}>
-          <Text style={styles.label}>Peso</Text>
-          <TextInput
-            style={styles.input}
-            onChange={setWeight}
-            value={weight ?? ''}
-            placeholder='Ex. 80.00'
-            KeyboardType='numeric'
-          />
-
-        </View>
-        <TouchableOpacity style={styles.buttom}
-          onPress={() => validateImc()}
-        >
-
+        <TouchableOpacity style={styles.buttom} onPress={() => validateTemperature()}>
           <Ionicons name={"calculator-sharp"} size={24} color='#edf2f4' />
           <Text style={styles.text}>{texteButton}</Text>
         </TouchableOpacity>
 
-        <View style={styles.imcConteiner}>
-          <Text style={styles.imcText}>{messageImc}</Text>
-          <Text style={styles.imcResult}>{imc}</Text>
+        <View style={styles.tempContainer}>
+          <Text style={styles.tempText}>{messageTemp}</Text>
+          <Text style={styles.tempResult}>{celsius} °C</Text>
         </View>
 
       </View>
@@ -90,8 +76,7 @@ const styles = StyleSheet.create({
     borderBottomStartRadius: 50,
     borderBottomEndRadius: 50,
   },
-  titleText:
-  {
+  titleText: {
     color: '#edf2f4',
     fontSize: 28,
     fontWeight: 'bold',
@@ -143,26 +128,23 @@ const styles = StyleSheet.create({
     color: "#edf2f4",
     fontSize: 20,
     fontWeight: "bold",
-    marginLeft: 5
-
+    marginLeft: 5,
   },
-  imcConteiner: {
+  tempContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    width: "100%"
+    width: "100%",
   },
-  imcText: {
+  tempText: {
     fontSize: 18,
     color: "#0080d0",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
-
-  imcResult: {
+  tempResult: {
     fontSize: 48,
     color: '#0080d0',
-    fontWeight: 'bold'
-  }
-
+    fontWeight: 'bold',
+  },
 });
 
